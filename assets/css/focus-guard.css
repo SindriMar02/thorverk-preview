@@ -1,0 +1,5 @@
+/* focus-guard.css: pairs with focus-guard.js. No ring after a tap or a click; every ring for the keyboard.
+   Text fields keep theirs (the user is typing there whatever opened it). */
+html[data-input="pointer"] :focus-visible:not(input):not(textarea):not(select):not([contenteditable="true"]) { outline: none; }
+/* a focus target that is only a container (a menu panel, a dialog, a drawer): never ring it */
+[tabindex="-1"]:focus { outline: none; }

@@ -1,0 +1,36 @@
+/* Thorverk motion layer support (pairs with assets/js/motion.js). Start states never use a
+   transform (GSAP owns transforms); the only CSS-hidden state is the first screen, for the
+   ~frame before motion.js runs, and the inline guard in base.j2 lifts it after 2.5 s regardless. */
+html.motion-on{scroll-behavior:auto}
+html.motion-smooth{scroll-behavior:auto}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-stopped{overflow:clip}
+.lenis.lenis-smooth [data-lenis-prevent]{overscroll-behavior:contain}
+
+html.motion-pre .hero-copy>*,html.motion-pre .hero-window,
+html.motion-pre .page-top>*,html.motion-pre .species-top>*,html.motion-pre .contact-top>*{opacity:0}
+
+/* line masks: room above and below the letters so Á Í Ó Ð Þ and descenders are never cut */
+.mline{display:block;overflow:clip;padding:.16em 0 .1em;margin:-.16em 0 -.1em}
+.mline__in{display:block}
+/* no standing will-change: GSAP promotes layers only while a tween runs (memory on phones) */
+
+/* framed photos drift inside their frames */
+.process-photo img,.wide-photo img{transform-origin:50% 50%}
+.process-photo{overflow:clip}
+
+/* the stuck process/species subnav reads as a layer above the page: the shadow sits on a
+   pseudo-element and only its opacity animates */
+.subnav::after{content:"";position:absolute;left:0;right:0;top:100%;height:16px;pointer-events:none;background:linear-gradient(rgba(48,55,30,.16),rgba(48,55,30,0));opacity:0;transition:opacity 200ms var(--ease)}
+.subnav.is-stuck::after{opacity:1}
+
+/* page to page: the header stays put while the content cross-fades (browsers without
+   cross-document view transitions simply navigate) */
+@media (prefers-reduced-motion:no-preference){
+  @view-transition{navigation:auto}
+  .site-head{view-transition-name:site-head}
+  ::view-transition-old(root){animation:160ms cubic-bezier(.23,1,.32,1) both tv-out}
+  ::view-transition-new(root){animation:260ms cubic-bezier(.23,1,.32,1) both tv-in}
+  @keyframes tv-out{to{opacity:0}}
+  @keyframes tv-in{from{opacity:0;transform:translateY(8px)}}
+}
